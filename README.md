@@ -1,8 +1,16 @@
-Program #5
+# Program #5
 
-Name:
-Cosc 5730 or 4730
+## Course: 
+Cosc 4730
 
-Description: (how to run the program, phone/emulator screen size, pixel 4a)
+## Name: 
+Will Brant
 
-Anything that doesn't work:
+## Description: (how to run the program, phone/emulator screen size, android version ie 11)
+- ATTN: COMPLETE THINGS
+- Moto G Power 2021: resolution of 720x1600 pixels, 20:9 ratio
+- Android version 11
+## Anything that doesn't work:
+- NOTHING IS IMPLEMENTED
+
+
