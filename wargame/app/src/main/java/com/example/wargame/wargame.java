@@ -64,11 +64,11 @@ public class wargame extends Fragment {
         grid.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view,  MotionEvent motionEvent) {
+                view.performClick();
                 float getX = motionEvent.getX();
                 float getY = motionEvent.getY();
-                view.performClick();
-                Toast.makeText(getContext(), "" + getX + " "+ getY, Toast.LENGTH_SHORT).show();
                 boolean check;
+                Toast.makeText(getContext(), "" + getX + " "+ getY, Toast.LENGTH_SHORT).show();
                 placeSymbol(getX, getY);
                 check = checkWin();
                 turnCounter++;
@@ -84,7 +84,7 @@ public class wargame extends Fragment {
                     textView.setText(R.string.draw);
                 }
                 turner();
-                    return false;
+                return false;
                 }
             });
         reset.setOnClickListener(new View.OnClickListener() {
@@ -96,22 +96,23 @@ public class wargame extends Fragment {
 
             }
         });
-        //upon click:
-//
 
         return myView;
     }
 
 
     public void placeSymbol(float getX, float getY){
-        if(xoro == 1){
-            //draw x where it should be
-        } else {
-            //draw o where it should be
-        }
-        //TODO: Implement matrix tracker
         int col;
         int row;
+        col = matrixFind(getX);
+        row = matrixFind(getY);
+        if(xoro == 1){
+            //draw x in col and row
+        } else {
+            //draw o in col and row
+        }
+        gridMatrix[row][col] = xoro;
+        //TODO: Implement matrix tracker
         /*
         whatever row was clicked, set row = rowClicked (int from 0-2)
         whatever col was clicked, set col = colClicked (int from 0-2)
@@ -122,6 +123,13 @@ public class wargame extends Fragment {
                 row = 1;
         }
          */
+    }
+    public int matrixFind(float getX){
+        int cor;
+        if(getX <=250){cor=1;} //who knows, might be bugged
+        else if(getX<=500){cor=2;}
+        else{cor=3;}
+        return cor;
     }
     public boolean checkWin(){ //this function scares me for the chance of bugs
         boolean win = false;
