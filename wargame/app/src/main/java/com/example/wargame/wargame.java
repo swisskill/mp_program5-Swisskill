@@ -137,13 +137,13 @@ public class wargame extends Fragment {
         }
         //two individual loops for row and col are faster than a nested loop. Big O issue
         if(!win){
-        for(int i = 0; i < 2; i++){
+        for(int i = 0; i <= 2; i++){ //rows
             winner = gridMatrix[i][0] + gridMatrix[i][1] + gridMatrix[i][2];
             win = checkCount(winner);
             if(win){break;}
         }}
         if(!win){
-        for(int j = 0; j < 2; j++){
+        for(int j = 0; j <= 2; j++){//columns
             winner = gridMatrix[0][j] + gridMatrix[1][j] + gridMatrix[2][j];
             Log.d("", ""+winner);
             win = checkCount(winner);
