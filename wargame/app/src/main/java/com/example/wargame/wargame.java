@@ -34,13 +34,14 @@ public class wargame extends Fragment {
     ImageView turnDisplay;
     Paint myPaint;
     ImageView grid;
-    Bitmap bitmap = Bitmap.createBitmap(150, 150, Bitmap.Config.ARGB_8888);
+    Bitmap bitmap;
     TextView textView;
     Chip reset;
     int xoro = 1; //where x is 1 and o is -1
     int turnCounter = 0; //counting turns means we don't have to check for ties with nested loops
     int[][] gridMatrix = new int[3][3];
     //----------------------------------------------------------------------------------------------
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -53,9 +54,8 @@ public class wargame extends Fragment {
         grid = myView.findViewById(R.id.imageView);
         //----------------canvas stuff. who knows if it works?
         myPaint = new Paint();
-//        myPaint.setColor(Color.BLACK);
 //        myPaint.setStyle(Paint.Style.STROKE);
-        bitmap = Bitmap.createBitmap(2000, 2300, Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(4500, 4800, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Bitmap bgrid = BitmapFactory.decodeResource(getResources(), R.drawable.ttt);
         canvas.drawBitmap(bgrid, 0, 0, myPaint);
@@ -63,12 +63,30 @@ public class wargame extends Fragment {
         //------------------------------------------------------------------------------------------
         grid.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public boolean onTouch(View view,  MotionEvent motionEvent) {
+                float getX = motionEvent.getX();
+                float getY = motionEvent.getY();
                 view.performClick();
-                Toast.makeText(getContext(), "hello" + motionEvent.getX() + motionEvent.getY(), Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
+                Toast.makeText(getContext(), "" + getX + " "+ getY, Toast.LENGTH_SHORT).show();
+                boolean check;
+                placeSymbol(getX, getY);
+                check = checkWin();
+                turnCounter++;
+                if(check){
+                    if(xoro == 1){
+                        textView.setText(R.string.x_wins);
+                    }else {
+                        textView.setText(R.string.o_wins);
+                    }
+                    turnDisplay.setImageResource(0);
+                    //TODO: also, allow no more touches or something
+                }else if ((!check) && (turnCounter == 9)) { //can i simplify?
+                    textView.setText(R.string.draw);
+                }
+                turner();
+                    return false;
+                }
+            });
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,28 +97,13 @@ public class wargame extends Fragment {
             }
         });
         //upon click:
-//            boolean check;
-//            placeSymbol();
-//            check = checkWin();
-//            turnCounter++;
-//            if(check){
-//                if(xoro == 1){
-//                    textView.setText(R.string.x_wins);
-//                }else {
-//                    textView.setText(R.string.o_wins);
-//                }
-//                turnDisplay.setImageResource(0);
-//                //TODO: also, allow no more touches or something
-//            }else if ((!check) && (turnCounter == 9)) { //can i simplify?
-//                textView.setText(R.string.draw);
-//            }
-//            turner();
+//
 
         return myView;
     }
 
 
-    public void placeSymbol(){
+    public void placeSymbol(float getX, float getY){
         if(xoro == 1){
             //draw x where it should be
         } else {
