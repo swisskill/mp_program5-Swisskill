@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,7 +69,7 @@ public class wargame extends Fragment {
                 float getX = motionEvent.getX();
                 float getY = motionEvent.getY();
                 boolean check;
-                Toast.makeText(getContext(), "" + getX + " "+ getY, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "" + getX + " "+ getY, Toast.LENGTH_SHORT).show();
                 placeSymbol(getX, getY);
                 check = checkWin();
                 turnCounter++;
@@ -90,10 +91,12 @@ public class wargame extends Fragment {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("Reset", "");
+                xoro = 1;
+                turnCounter = 0;
                 turnDisplay.setImageResource(R.drawable.x);
                 textView.setText("");
                 gridMatrix = newInstance().gridMatrix;
-
             }
         });
 
@@ -112,38 +115,40 @@ public class wargame extends Fragment {
             //draw o in col and row
         }
         gridMatrix[row][col] = xoro;
-        //TODO: Implement matrix tracker
-        /*
-        whatever row was clicked, set row = rowClicked (int from 0-2)
-        whatever col was clicked, set col = colClicked (int from 0-2)
-        gridMatrix[row][col] = xoro //i believe this is the layout of the matrix
-
-        switch (placeClicked){ //use this if necessary
-            case 0<rowClicked<1:
-                row = 1;
-        }
-         */
+        Log.wtf("row and column", "" + row + " "+col);
+        Log.wtf("wb", ""+gridMatrix[row][0]+","+gridMatrix[row][1]+","+gridMatrix[row][2]);
+        //Log.wtf("grid[][] ", String.valueOf(gridMatrix[row][col]));
     }
     public int matrixFind(float getX){
         int cor;
-        if(getX <=250){cor=1;} //who knows, might be bugged
-        else if(getX<=500){cor=2;}
-        else{cor=3;}
+        if(getX <=250){cor=0;} //who knows, might be bugged
+        else if(getX<=500){cor=1;}
+        else{cor=2;}
         return cor;
     }
     public boolean checkWin(){ //this function scares me for the chance of bugs
         boolean win = false;
+        int winner;
+        winner = gridMatrix[0][0] + gridMatrix[1][1]+gridMatrix[2][2];
+        win = checkCount(winner);
+        if(!win){
+            winner = gridMatrix[0][2] + gridMatrix[1][1]+gridMatrix[2][0];
+            win = checkCount(winner);
+        }
         //two individual loops for row and col are faster than a nested loop. Big O issue
+        if(!win){
         for(int i = 0; i < 2; i++){
-            int winner = gridMatrix[i][0] + gridMatrix[i][1] + gridMatrix[i][2];
+            winner = gridMatrix[i][0] + gridMatrix[i][1] + gridMatrix[i][2];
             win = checkCount(winner);
             if(win){break;}
-        }
+        }}
+        if(!win){
         for(int j = 0; j < 2; j++){
-            int winner = gridMatrix[0][j] + gridMatrix[1][j] + gridMatrix[2][j];
+            winner = gridMatrix[0][j] + gridMatrix[1][j] + gridMatrix[2][j];
+            Log.d("", ""+winner);
             win = checkCount(winner);
             if(win){break;}
-        }
+        }}
         return win;
     }
     public boolean checkCount(int winner){
