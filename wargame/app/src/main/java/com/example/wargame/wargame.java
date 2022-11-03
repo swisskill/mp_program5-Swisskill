@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
@@ -23,9 +24,10 @@ public class wargame extends Fragment {
         return new wargame();
     } //CONSTRUCTOR
     ImageView turnDisplay; //aka X or O; pronounced "zoro"
+    TextView textView;
     Chip reset;
-    int winner = 0; //x wins with 3, o wins with -3
     int xoro = 1; //where x is 1 and o is -1
+    int turnCounter = 0; //counting turns means we don't have to check for ties with nested loops
     int[][] gridMatrix = new int[3][3];
     //----------------------------------------------------------------------------------------------
     @Override
@@ -34,17 +36,28 @@ public class wargame extends Fragment {
         View myView = inflater.inflate(R.layout.fragment_wargame, container, false);
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         turnDisplay= myView.findViewById(R.id.imageView1);
+        textView = myView.findViewById(R.id.textView);
         reset=myView.findViewById(R.id.chip4);
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                turnDisplay.setImageResource(R.drawable.x);
+                textView.setText("");
                 gridMatrix = newInstance().gridMatrix;
+                        
             }
         });
         //upon click:
-            //placeSymbol();
-            //checkWin();
-            //turner();
+//            boolean check;
+//            //placeSymbol();
+//            check = checkWin();
+//            turnCounter++;
+//            if(check){
+//              textView.setText(R.string.x_wins);
+//              turnDisplay.setImageResource(R.drawable.x);
+//              //display game over and allow no more touches or something
+//            }else if (!check && (turnCounter == 9))
+//            turner();
 
         return myView;
     }
@@ -74,18 +87,18 @@ public class wargame extends Fragment {
         boolean win = false;
         //two individual loops for row and col are faster than a nested loop. Big O issue
         for(int i = 0; i < 2; i++){
-            winner = gridMatrix[i][0] + gridMatrix[i][1] + gridMatrix[i][2];
-            win = checkCount();
+            int winner = gridMatrix[i][0] + gridMatrix[i][1] + gridMatrix[i][2];
+            win = checkCount(winner);
             if(win){break;}
         }
         for(int j = 0; j < 2; j++){
-            winner = gridMatrix[0][j] + gridMatrix[1][j] + gridMatrix[2][j];
-            win = checkCount();
+            int winner = gridMatrix[0][j] + gridMatrix[1][j] + gridMatrix[2][j];
+            win = checkCount(winner);
             if(win){break;}
         }
         return win;
     }
-    public boolean checkCount(){
+    public boolean checkCount(int winner){
         boolean win = false;
         if(winner == 3){
             win = true;
