@@ -2,5 +2,6 @@
     <string name="app_name">War Game</string>
     <string name="x_wins">GAME OVER: X WINS</string>
     <string name="o_wins">GAME OVER: O WINS</string>
+    <string name="draw">GAME OVER: DRAW</string>
 
 </resources>

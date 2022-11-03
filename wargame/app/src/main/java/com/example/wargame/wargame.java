@@ -1,5 +1,10 @@
 package com.example.wargame;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,7 +28,10 @@ public class wargame extends Fragment {
     public static wargame newInstance() {
         return new wargame();
     } //CONSTRUCTOR
-    ImageView turnDisplay; //aka X or O; pronounced "zoro"
+    ImageView turnDisplay;
+    Paint myPaint;
+    ImageView grid;
+    Bitmap bitmap = Bitmap.createBitmap(150, 150, Bitmap.Config.ARGB_8888);
     TextView textView;
     Chip reset;
     int xoro = 1; //where x is 1 and o is -1
@@ -35,28 +43,43 @@ public class wargame extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_wargame, container, false);
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
+        //-----------------------------Nasty declarations-------------------------------------------
         turnDisplay= myView.findViewById(R.id.imageView1);
         textView = myView.findViewById(R.id.textView);
         reset=myView.findViewById(R.id.chip4);
+        //----------------canvas stuff. who knows if it works?
+        grid = myView.findViewById(R.id.imageView);
+        myPaint = new Paint();
+        myPaint.setColor(Color.BLACK);
+        myPaint.setStyle(Paint.Style.STROKE);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawBitmap(bitmap, 150, 150, myPaint);
+        //------------------------------------------------------------------------------------------
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 turnDisplay.setImageResource(R.drawable.x);
                 textView.setText("");
                 gridMatrix = newInstance().gridMatrix;
-                        
+
             }
         });
         //upon click:
 //            boolean check;
-//            //placeSymbol();
+//            placeSymbol();
 //            check = checkWin();
 //            turnCounter++;
 //            if(check){
-//              textView.setText(R.string.x_wins);
-//              turnDisplay.setImageResource(R.drawable.x);
-//              //display game over and allow no more touches or something
-//            }else if (!check && (turnCounter == 9))
+//                if(xoro == 1){
+//                    textView.setText(R.string.x_wins);
+//                }else {
+//                    textView.setText(R.string.o_wins);
+//                }
+//                turnDisplay.setImageResource(0);
+//                //TODO: also, allow no more touches or something
+//            }else if ((!check) && (turnCounter == 9)) { //can i simplify?
+//                textView.setText(R.string.draw);
+//            }
 //            turner();
 
         return myView;
