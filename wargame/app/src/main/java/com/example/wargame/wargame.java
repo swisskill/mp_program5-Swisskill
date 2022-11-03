@@ -1,6 +1,8 @@
 package com.example.wargame;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -47,14 +50,25 @@ public class wargame extends Fragment {
         turnDisplay= myView.findViewById(R.id.imageView1);
         textView = myView.findViewById(R.id.textView);
         reset=myView.findViewById(R.id.chip4);
-        //----------------canvas stuff. who knows if it works?
         grid = myView.findViewById(R.id.imageView);
+        //----------------canvas stuff. who knows if it works?
         myPaint = new Paint();
-        myPaint.setColor(Color.BLACK);
-        myPaint.setStyle(Paint.Style.STROKE);
+//        myPaint.setColor(Color.BLACK);
+//        myPaint.setStyle(Paint.Style.STROKE);
+        bitmap = Bitmap.createBitmap(2000, 2300, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        canvas.drawBitmap(bitmap, 150, 150, myPaint);
+        Bitmap bgrid = BitmapFactory.decodeResource(getResources(), R.drawable.ttt);
+        canvas.drawBitmap(bgrid, 0, 0, myPaint);
+        grid.setImageBitmap(bitmap);
         //------------------------------------------------------------------------------------------
+        grid.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                view.performClick();
+                Toast.makeText(getContext(), "hello" + motionEvent.getX() + motionEvent.getY(), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
