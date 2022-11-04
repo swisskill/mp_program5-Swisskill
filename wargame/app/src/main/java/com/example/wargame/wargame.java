@@ -6,7 +6,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -35,6 +37,7 @@ public class wargame extends Fragment {
     ImageView turnDisplay;
     Paint myPaint;
     ImageView grid;
+    Drawable drawable;
     Bitmap bitmap;
     TextView textView;
     Chip reset;
@@ -66,11 +69,12 @@ public class wargame extends Fragment {
             @Override
             public boolean onTouch(View view,  MotionEvent motionEvent) {
                 if(motionEvent.getAction()==MotionEvent.ACTION_UP) {
+                    drawable = turnDisplay.getDrawable();
                     view.performClick();
                     float getX = motionEvent.getX();
                     float getY = motionEvent.getY();
                     boolean check;
-                    placeSymbol(getX, getY);
+                    placeSymbol(getX, getY, canvas);
                     check = checkWin();
                     gameOver++;
                     if (check) {
@@ -99,6 +103,9 @@ public class wargame extends Fragment {
                 turnDisplay.setImageResource(R.drawable.x);
                 textView.setText("");
                 gridMatrix = newInstance().gridMatrix;
+                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                canvas.drawBitmap(bgrid, 0, 0, myPaint);
+
             }
         });
 
@@ -106,7 +113,7 @@ public class wargame extends Fragment {
     }
 
 
-    public void placeSymbol(float getX, float getY){
+    public void placeSymbol(float getX, float getY, Canvas canvas){
         //TODO:do something in place symbol to make sure we don't overwrite anything. we could very well
         //not change it and subtract the game counter by 1 to pretend like nothing happened.
         int col;
@@ -114,8 +121,13 @@ public class wargame extends Fragment {
         col = matrixFind(getX);
         row = matrixFind(getY);
         if(xoro == 1){
+            //canvas.drawCircle(100,100,100, myPaint);
+            drawable.setBounds(2000, 2000, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            drawable.draw(canvas);
             //draw x in col and row
         } else {
+            drawable.setBounds(750, 750, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            drawable.draw(canvas);
             //draw o in col and row
         }
         gridMatrix[row][col] = xoro;
