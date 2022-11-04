@@ -36,7 +36,6 @@ public class wargame extends Fragment {
     } //CONSTRUCTOR
     ImageView turnDisplay;
     Paint myPaint;
-    boolean reseter = false;
     ImageView grid;
     Drawable drawable;
     Bitmap bitmap;
@@ -119,7 +118,7 @@ public class wargame extends Fragment {
         if(gridMatrix[row][col] == 0) {
             gridMatrix[row][col] = xoro;
             if (xoro == 1) {
-                drawable.setBounds(100, 200, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                drawable.setBounds((int) getX, (int) getY, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
                 drawable.draw(canvas);
                 //draw x in col and row
             } else {
@@ -128,6 +127,7 @@ public class wargame extends Fragment {
                 //draw o in col and row
             }
         } else {gameOver--;} //TODO: Will probably need to add more for making sure that you can't redo a turn, but need visual
+        //probably xoro = xoro*-1
     }
     public int matrixFind(float get){
         int cor;
