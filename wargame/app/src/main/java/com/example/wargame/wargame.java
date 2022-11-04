@@ -31,20 +31,18 @@ import java.util.Objects;
 
 public class wargame extends Fragment {
     //---------------------------Declarations-------------------------------------------------------
-    public static wargame newInstance() {
-        return new wargame();
-    } //CONSTRUCTOR
+    public static wargame newInstance() {return new wargame();} //CONSTRUCTOR
     ImageView turnDisplay;
     Paint myPaint;
     ImageView grid;
     Drawable drawable;
     Bitmap bitmap;
     TextView textView;
-    int canvasWidth;
-    int canvasHeight;
+    int cWit;
+    int cHit;
     Chip reset;
     int xoro = 1; //where x is 1 and o is -1
-    int gameOver = 0; //counting turns means we don't have to check for ties with nested loops
+    int gameOver = 0; //turn counter
     int[][] gridMatrix = new int[3][3];
     //----------------------------------------------------------------------------------------------
     @SuppressLint("ClickableViewAccessibility")
@@ -58,17 +56,15 @@ public class wargame extends Fragment {
         textView = myView.findViewById(R.id.textView);
         reset=myView.findViewById(R.id.chip4);
         grid = myView.findViewById(R.id.imageView);
-        //----------------canvas stuff. who knows if it works?
         myPaint = new Paint();
-//        myPaint.setStyle(Paint.Style.STROKE);
         bitmap = Bitmap.createBitmap(2059, 2371, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Bitmap bgrid = BitmapFactory.decodeResource(getResources(), R.drawable.ttt);
         canvas.drawBitmap(bgrid, 0, 0, myPaint);
         grid.setImageBitmap(bitmap);
-        canvasWidth = canvas.getWidth();
-        canvasHeight = canvas.getHeight();
-        //------------------------------------------------------------------------------------------
+        cWit = canvas.getWidth();
+        cHit = canvas.getHeight();
+        //------------------On touch listener for the grid------------------------------------------
         grid.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view,  MotionEvent motionEvent) {
@@ -94,6 +90,7 @@ public class wargame extends Fragment {
                 return false;
                 }
             });
+        //-------------------listener for the reset button------------------------------------------
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,46 +107,45 @@ public class wargame extends Fragment {
 
         return myView;
     }
-
+    //-------------------Puts the X or O on the canvas and in the matrix----------------------------
     public void placeSymbol(float getX, float getY, Canvas canvas){
-        //TODO:do something in place symbol to make sure we don't overwrite anything. we could very well
-        //not change it and subtract the game counter by 1 to pretend like nothing happened.
         int col;
         int row;
-        col = matrixFind(getX, canvasWidth/9);
-        row = matrixFind(getY, canvasHeight/9);
+        col = matrixFind(getX, cWit/9);
+        row = matrixFind(getY, cHit/9);
         Log.d("row + col: ", ""+row+","+col);
         if(gridMatrix[row][col] == 0) {
             gridMatrix[row][col] = xoro;
             if (xoro == 1) {
-                drawable.setBounds((col*canvasWidth/3),row*canvasHeight/3,((col*canvasWidth/3)+canvasWidth/3),(row*canvasHeight/3)+canvasHeight/3);
+                drawable.setBounds((col*cWit/3),row*cHit/3,((col*cWit/3)+cWit/3),(row*cHit/3)+cHit/3);
                 drawable.draw(canvas);
             } else {
-                drawable.setBounds((col*canvasWidth/3),row*canvasHeight/3,((col*canvasWidth/3)+canvasWidth/3),(row*canvasHeight/3)+canvasHeight/3);
+                drawable.setBounds((col*cWit/3),row*cHit/3,((col*cWit/3)+cWit/3),(row*cHit/3)+cHit/3);
                 drawable.draw(canvas);
             }
-        } else {gameOver--;xoro = xoro*-1;} //TODO: Will probably need to add more for making sure that you can't redo a turn, but need visual
+        } else {gameOver--;xoro = xoro*-1;}
     }
+    //-----------called by placeSymbol. Determines the column and row-------------------------------
     public int matrixFind(float get, int dimension){
         int cor;
         Log.wtf("dim,get", ""+dimension + "," + get);
-        if(get <=dimension){cor=0;} //who knows, might be bugged
+        if(get <=dimension){cor=0;}
         else if(get<=(dimension+dimension)){cor=1;}
         else{cor=2;}
         return cor;
     }
-    public boolean checkWin(){ //this function scares me for the chance of bugs
+    //-----------Called in grid listener; checks win conditions on every click----------------------
+    public boolean checkWin(){
         boolean win = false;
         int winner;
-        winner = gridMatrix[0][0] + gridMatrix[1][1]+gridMatrix[2][2];
+        winner = gridMatrix[0][0] + gridMatrix[1][1]+gridMatrix[2][2];//diagonal left to right
         win = checkCount(winner);
-        if(!win){
+        if(!win){ //diagonal right to left
             winner = gridMatrix[0][2] + gridMatrix[1][1]+gridMatrix[2][0];
             win = checkCount(winner);
         }
-        //two individual loops for row and col are faster than a nested loop. Big O issue
-        if(!win){
-        for(int i = 0; i <= 2; i++){ //rows
+        if(!win){ //two individual loops for row and col are faster than a nested loop. Big O issue
+        for(int i = 0; i <= 2; i++){ //rows check
             winner = gridMatrix[i][0] + gridMatrix[i][1] + gridMatrix[i][2];
             win = checkCount(winner);
             if(win){break;}
@@ -163,6 +159,7 @@ public class wargame extends Fragment {
         }}
         return win;
     }
+    //------Called by checkWin;Determines if winner is X or O---------------------------------------
     public boolean checkCount(int winner){
         boolean win = false;
         if(winner == 3){
@@ -172,6 +169,7 @@ public class wargame extends Fragment {
         }
         return win;
     }
+    //------Called by grid listener. Changes xoro and display---------------------------------------
     public void turner(){
         if (xoro == 1) {  //if x
             turnDisplay.setImageResource(R.drawable.o);
@@ -182,8 +180,3 @@ public class wargame extends Fragment {
         }
     }
 }
-
-
-/*
-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
- */

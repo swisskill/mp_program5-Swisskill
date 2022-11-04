@@ -11,6 +11,6 @@ Will Brant
 - Moto G Power 2021: resolution of 720x1600 pixels, 20:9 ratio
 - Android version 11
 ## Anything that doesn't work:
-- Cannot specify locations of Xs or Os
+- It all should work
 
 
