@@ -40,6 +40,8 @@ public class wargame extends Fragment {
     Drawable drawable;
     Bitmap bitmap;
     TextView textView;
+    int canvasWidth;
+    int canvasHeight;
     Chip reset;
     int xoro = 1; //where x is 1 and o is -1
     int gameOver = 0; //counting turns means we don't have to check for ties with nested loops
@@ -64,6 +66,8 @@ public class wargame extends Fragment {
         Bitmap bgrid = BitmapFactory.decodeResource(getResources(), R.drawable.ttt);
         canvas.drawBitmap(bgrid, 0, 0, myPaint);
         grid.setImageBitmap(bitmap);
+        canvasWidth = canvas.getWidth();
+        canvasHeight = canvas.getHeight();
         //------------------------------------------------------------------------------------------
         grid.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -118,13 +122,11 @@ public class wargame extends Fragment {
         if(gridMatrix[row][col] == 0) {
             gridMatrix[row][col] = xoro;
             if (xoro == 1) {
-                drawable.setBounds((int) getX, (int) getY, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                drawable.setBounds((col*canvasWidth/3),row*canvasHeight/3,((col*canvasWidth/3)+canvasWidth/3),(row*canvasHeight/3)+canvasHeight/3);
                 drawable.draw(canvas);
-                //draw x in col and row
             } else {
-                drawable.setBounds(750, 750, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                drawable.setBounds((col*canvasWidth/3),row*canvasHeight/3,((col*canvasWidth/3)+canvasWidth/3),(row*canvasHeight/3)+canvasHeight/3);
                 drawable.draw(canvas);
-                //draw o in col and row
             }
         } else {gameOver--;} //TODO: Will probably need to add more for making sure that you can't redo a turn, but need visual
         //probably xoro = xoro*-1
