@@ -116,8 +116,8 @@ public class wargame extends Fragment {
         //not change it and subtract the game counter by 1 to pretend like nothing happened.
         int col;
         int row;
-        col = matrixFind(getX);
-        row = matrixFind(getY);
+        col = matrixFind(getX, canvasWidth/9);
+        row = matrixFind(getY, canvasHeight/9);
         Log.d("row + col: ", ""+row+","+col);
         if(gridMatrix[row][col] == 0) {
             gridMatrix[row][col] = xoro;
@@ -128,13 +128,13 @@ public class wargame extends Fragment {
                 drawable.setBounds((col*canvasWidth/3),row*canvasHeight/3,((col*canvasWidth/3)+canvasWidth/3),(row*canvasHeight/3)+canvasHeight/3);
                 drawable.draw(canvas);
             }
-        } else {gameOver--;} //TODO: Will probably need to add more for making sure that you can't redo a turn, but need visual
-        //probably xoro = xoro*-1
+        } else {gameOver--;xoro = xoro*-1;} //TODO: Will probably need to add more for making sure that you can't redo a turn, but need visual
     }
-    public int matrixFind(float get){
+    public int matrixFind(float get, int dimension){
         int cor;
-        if(get <=250){cor=0;} //who knows, might be bugged
-        else if(get<=500){cor=1;}
+        Log.wtf("dim,get", ""+dimension + "," + get);
+        if(get <=dimension){cor=0;} //who knows, might be bugged
+        else if(get<=(dimension+dimension)){cor=1;}
         else{cor=2;}
         return cor;
     }
