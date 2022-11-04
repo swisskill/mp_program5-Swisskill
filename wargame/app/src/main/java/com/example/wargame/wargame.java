@@ -115,6 +115,7 @@ public class wargame extends Fragment {
         int row;
         col = matrixFind(getX);
         row = matrixFind(getY);
+        Log.d("row + col: ", ""+row+","+col);
         if(gridMatrix[row][col] == 0) {
             gridMatrix[row][col] = xoro;
             if (xoro == 1) {
@@ -128,10 +129,10 @@ public class wargame extends Fragment {
             }
         } else {gameOver--;} //TODO: Will probably need to add more for making sure that you can't redo a turn, but need visual
     }
-    public int matrixFind(float getX){
+    public int matrixFind(float get){
         int cor;
-        if(getX <=250){cor=0;} //who knows, might be bugged
-        else if(getX<=500){cor=1;}
+        if(get <=250){cor=0;} //who knows, might be bugged
+        else if(get<=500){cor=1;}
         else{cor=2;}
         return cor;
     }
