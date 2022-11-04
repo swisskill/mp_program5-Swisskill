@@ -60,7 +60,7 @@ public class wargame extends Fragment {
         //----------------canvas stuff. who knows if it works?
         myPaint = new Paint();
 //        myPaint.setStyle(Paint.Style.STROKE);
-        bitmap = Bitmap.createBitmap(4500, 4800, Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(2059, 2371, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Bitmap bgrid = BitmapFactory.decodeResource(getResources(), R.drawable.ttt);
         canvas.drawBitmap(bgrid, 0, 0, myPaint);
