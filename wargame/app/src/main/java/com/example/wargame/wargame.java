@@ -36,6 +36,7 @@ public class wargame extends Fragment {
     } //CONSTRUCTOR
     ImageView turnDisplay;
     Paint myPaint;
+    boolean reseter = false;
     ImageView grid;
     Drawable drawable;
     Bitmap bitmap;
@@ -68,7 +69,7 @@ public class wargame extends Fragment {
         grid.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view,  MotionEvent motionEvent) {
-                if(motionEvent.getAction()==MotionEvent.ACTION_UP) {
+                if((motionEvent.getAction()==MotionEvent.ACTION_UP)&&(gameOver != 9)) {
                     drawable = turnDisplay.getDrawable();
                     view.performClick();
                     float getX = motionEvent.getX();
@@ -78,18 +79,14 @@ public class wargame extends Fragment {
                     check = checkWin();
                     gameOver++;
                     if (check) {
-                        if (xoro == 1) {
-                            textView.setText(R.string.x_wins);
-                        } else {
-                            textView.setText(R.string.o_wins);
-                        }
+                        if (xoro == 1) {textView.setText(R.string.x_wins);}
+                        else {textView.setText(R.string.o_wins);}
                         turnDisplay.setImageResource(0);
-                        gameOver = 9; //WHY? it just signals game over
-                    } else if ((!check) && (gameOver == 9)) { //can i simplify?
+                        gameOver = 9;
+                    } else if (gameOver == 9) {
                         textView.setText(R.string.draw);
                         turnDisplay.setImageResource(0);
                     } else{turner();}
-
                 }
                 return false;
                 }
@@ -100,18 +97,16 @@ public class wargame extends Fragment {
                 Log.d("Reset", "");
                 xoro = 1;
                 gameOver = 0;
-                turnDisplay.setImageResource(R.drawable.x);
-                textView.setText("");
                 gridMatrix = newInstance().gridMatrix;
                 canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                 canvas.drawBitmap(bgrid, 0, 0, myPaint);
-
+                turnDisplay.setImageResource(R.drawable.x);
+                textView.setText("");
             }
         });
 
         return myView;
     }
-
 
     public void placeSymbol(float getX, float getY, Canvas canvas){
         //TODO:do something in place symbol to make sure we don't overwrite anything. we could very well
@@ -120,20 +115,18 @@ public class wargame extends Fragment {
         int row;
         col = matrixFind(getX);
         row = matrixFind(getY);
-        if(xoro == 1){
-            //canvas.drawCircle(100,100,100, myPaint);
-            drawable.setBounds(2000, 2000, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-            drawable.draw(canvas);
-            //draw x in col and row
-        } else {
-            drawable.setBounds(750, 750, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-            drawable.draw(canvas);
-            //draw o in col and row
-        }
-        gridMatrix[row][col] = xoro;
-        Log.wtf("row and column", "" + row + " "+col);
-        Log.wtf("wb", ""+gridMatrix[row][0]+","+gridMatrix[row][1]+","+gridMatrix[row][2]);
-        //Log.wtf("grid[][] ", String.valueOf(gridMatrix[row][col]));
+        if(gridMatrix[row][col] == 0) {
+            gridMatrix[row][col] = xoro;
+            if (xoro == 1) {
+                drawable.setBounds(2000, 2000, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                drawable.draw(canvas);
+                //draw x in col and row
+            } else {
+                drawable.setBounds(750, 750, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                drawable.draw(canvas);
+                //draw o in col and row
+            }
+        } else {gameOver--;} //TODO: Will probably need to add more for making sure that you can't redo a turn, but need visual
     }
     public int matrixFind(float getX){
         int cor;
