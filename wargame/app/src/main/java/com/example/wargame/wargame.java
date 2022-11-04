@@ -39,7 +39,7 @@ public class wargame extends Fragment {
     TextView textView;
     Chip reset;
     int xoro = 1; //where x is 1 and o is -1
-    int turnCounter = 0; //counting turns means we don't have to check for ties with nested loops
+    int gameOver = 0; //counting turns means we don't have to check for ties with nested loops
     int[][] gridMatrix = new int[3][3];
     //----------------------------------------------------------------------------------------------
     @SuppressLint("ClickableViewAccessibility")
@@ -65,26 +65,28 @@ public class wargame extends Fragment {
         grid.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view,  MotionEvent motionEvent) {
-                view.performClick();
-                float getX = motionEvent.getX();
-                float getY = motionEvent.getY();
-                boolean check;
-                //Toast.makeText(getContext(), "" + getX + " "+ getY, Toast.LENGTH_SHORT).show();
-                placeSymbol(getX, getY);
-                check = checkWin();
-                turnCounter++;
-                if(check){
-                    if(xoro == 1){
-                        textView.setText(R.string.x_wins);
-                    }else {
-                        textView.setText(R.string.o_wins);
-                    }
-                    turnDisplay.setImageResource(0);
-                    //TODO: also, allow no more touches or something
-                }else if ((!check) && (turnCounter == 9)) { //can i simplify?
-                    textView.setText(R.string.draw);
+                if(motionEvent.getAction()==MotionEvent.ACTION_UP) {
+                    view.performClick();
+                    float getX = motionEvent.getX();
+                    float getY = motionEvent.getY();
+                    boolean check;
+                    placeSymbol(getX, getY);
+                    check = checkWin();
+                    gameOver++;
+                    if (check) {
+                        if (xoro == 1) {
+                            textView.setText(R.string.x_wins);
+                        } else {
+                            textView.setText(R.string.o_wins);
+                        }
+                        turnDisplay.setImageResource(0);
+                        gameOver = 9; //WHY? it just signals game over
+                    } else if ((!check) && (gameOver == 9)) { //can i simplify?
+                        textView.setText(R.string.draw);
+                        turnDisplay.setImageResource(0);
+                    } else{turner();}
+
                 }
-                turner();
                 return false;
                 }
             });
@@ -93,7 +95,7 @@ public class wargame extends Fragment {
             public void onClick(View view) {
                 Log.d("Reset", "");
                 xoro = 1;
-                turnCounter = 0;
+                gameOver = 0;
                 turnDisplay.setImageResource(R.drawable.x);
                 textView.setText("");
                 gridMatrix = newInstance().gridMatrix;
@@ -105,6 +107,8 @@ public class wargame extends Fragment {
 
 
     public void placeSymbol(float getX, float getY){
+        //TODO:do something in place symbol to make sure we don't overwrite anything. we could very well
+        //not change it and subtract the game counter by 1 to pretend like nothing happened.
         int col;
         int row;
         col = matrixFind(getX);
