@@ -118,7 +118,7 @@ public class wargame extends Fragment {
         if(gridMatrix[row][col] == 0) {
             gridMatrix[row][col] = xoro;
             if (xoro == 1) {
-                drawable.setBounds(2000, 2000, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                drawable.setBounds(100, 200, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
                 drawable.draw(canvas);
                 //draw x in col and row
             } else {
