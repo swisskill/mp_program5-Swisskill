@@ -1,3 +1,5 @@
+
+45/50(some times i am unable to insert x or o and it works after 3 or 4 taps. Also when i tap in middle o/x is inserted in the adjacent cell. 
 # Program #5
 
 ## Course: 
